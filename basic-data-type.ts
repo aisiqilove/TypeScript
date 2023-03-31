@@ -183,3 +183,288 @@ function add(a: number | string, b: number | string): number | string {
     }
     return a + b
 }
+
+// # 类型断言
+// 类型断言（Type Assertion）可以用来手动指定一个值的类型
+// 1. 尖括号语法
+// 2. as语法
+class Student {
+    name: string
+    sayHi() {
+        console.log('hi');
+    }
+}
+class Teacher {
+    name: string
+    sayBye() {
+        console.log('bye');
+    }
+}
+function tsGetPersonName(person: Student | Teacher) {
+    // return person.name
+    if (person instanceof Student) {
+        (person as Student).sayHi()
+    } else {
+        (person as Teacher).sayBye()
+    }
+}
+
+// # 类型别名
+// 类型别名用来给一个类型起个新名字
+type Name = string
+type NameResolver = () => string
+type NameOrResolver = Name | NameResolver
+function getName(n: NameOrResolver): Name {
+    if (typeof n === 'string') {
+        return n
+    } else {
+        return n()
+    }
+}
+
+// # 字符串字面量类型
+// 字符串字面量类型用来约束取值只能是某几个字符串中的一个
+type EventNames = 'click' | 'scroll' | 'mousemove'
+function tsHandleEvent(event: EventNames) {
+    // do something
+    console.log(event);
+}
+tsHandleEvent('click')
+// tsHandleEvent('event')
+
+// # 数组
+// 1. 类型 + 方括号
+let tsFibonacci: number[] = [1, 1, 2, 3, 5]
+// 2. 数组泛型
+let tsFibonacci1: Array<number> = [1, 1, 2, 3, 5]
+// 3. 用接口表示数组
+interface NumberArray {
+    [index: number]: number
+}
+let tsFibonacci2: NumberArray = [1, 1, 2, 3, 5]
+
+// # 元组
+// 元组（Tuple）合并了不同类型的对象
+let tsXcatliu: [string, number] = ['Xcat Liu', 25]
+tsXcatliu[0] = 'Xcat Liu'
+tsXcatliu[1] = 25
+// tsXcatliu[0] = 25
+// tsXcatliu[1] = 'Xcat Liu'
+
+// # 枚举
+// 枚举（Enum）类型用于取值被限定在一定范围内的场景
+// 1. 数字枚举
+enum tsDirection {
+    Up,
+    Down,
+    Left,
+    Right
+}
+console.log(tsDirection.Up);
+console.log(tsDirection[0]);
+// 2. 字符串枚举
+enum tsDirection1 {
+    Up = 'UP',
+    Down = 'DOWN',
+    Left = 'LEFT',
+    Right = 'RIGHT'
+}
+console.log(tsDirection1.Up);
+console.log(tsDirection1[0]);
+// 3. 异构枚举
+// enum tsDirection2 {
+//     Up = 'UP',
+//     Down = 'DOWN',
+//     Left,
+//     Right
+// }
+// 4. 常量枚举
+const enum tsDirection3 {
+    Up,
+    Down,
+    Left,
+    Right
+}
+let tsDirections = [tsDirection3.Up, tsDirection3.Down, tsDirection3.Left, tsDirection3.Right]
+// 5. 枚举成员
+enum tsDirection4 {
+    Up,
+    Down,
+    Left,
+    Right
+}
+enum tsDirection5 {
+    Up = 'UP',
+    Down = 'DOWN',
+    Left = 'LEFT',
+    Right = 'RIGHT'
+}
+enum tsDirection6 {
+    Up = 1,
+    Down,
+    Left,
+    Right
+}
+
+// # 类
+// 1. 类的定义
+class tsAnimal {
+    name: string
+    constructor(name: string) {
+        this.name = name
+    }
+    sayHi() {
+        return `My name is ${this.name}`
+    }
+}
+let tsCat = new tsAnimal('Tom')
+console.log(tsCat.sayHi());
+// 2. 继承
+class tsCat1 extends tsAnimal {
+    constructor(name: string) {
+        super(name)
+        console.log(this.name);
+    }
+    sayHi() {
+        return 'Meow, ' + super.sayHi()
+    }
+}
+let tsCat2 = new tsCat1('Tom')
+console.log(tsCat2.sayHi());
+// 3. 公共、私有与受保护的修饰符
+// 4. readonly修饰符
+// 5. 参数属性
+class tsAnimal1 {
+    constructor(public name: string) {
+        this.name = name
+    }
+}
+// 6. 存取器
+class tsAnimal2 {
+    private _name: string
+    constructor(_name: string) {
+        this._name = _name
+    }
+    get name() {
+        return 'Jack' + this._name
+    }
+    set name(value) {
+        console.log('setter: ' + value);
+        this._name = value
+    }
+}
+let tsCat3 = new tsAnimal2('Tom')
+tsCat3.name = 'Tom'
+console.log(tsCat3.name);
+// 7. 静态属性
+class tsAnimal3 {
+    static isAnimal(a) {
+        return a instanceof tsAnimal3
+    }
+}
+let tsCat4 = new tsAnimal3()
+tsAnimal3.isAnimal(tsCat4)
+
+// 8. 抽象类
+abstract class tsAnimal4 {
+    public name: string
+    public constructor(name: string) {
+        this.name = name
+    }
+    public abstract sayHi()
+}
+class tsCat5 extends tsAnimal4 {
+    public sayHi() {
+        console.log(`Meow, My name is ${this.name}`);
+    }
+}
+let tsCat6 = new tsCat5('Tom')
+tsCat6.sayHi()
+
+// 9. 类与接口
+
+// 9.1 类实现接口
+interface tsAlarm1 {
+    alert()
+}
+class tsDoor1 implements tsAlarm1 {
+    alert() {
+        console.log('Door alert');
+    }
+}
+class tsPoliceDoor extends tsDoor1 implements tsAlarm1 {
+    alert() {
+        super.alert()
+        console.log('Police door alert');
+    }
+}
+
+// 9.2 接口继承接口
+interface tsAlarm2 {
+    alert()
+}
+interface tsLightableAlarm extends tsAlarm2 {
+    lightOn()
+    lightOff()
+}
+class tsDoor2 implements tsLightableAlarm {
+    alert() {
+        console.log('Door alert');
+    }
+    lightOn() {
+        console.log('Door light on');
+    }
+    lightOff() {
+        console.log('Door light off');
+    }
+}
+
+// 9.3 接口继承类
+class tsPoint {
+    x: number
+    y: number
+}
+interface tsPoint3d extends tsPoint {
+    z: number
+}
+let tsPoint3d: tsPoint3d = { x: 1, y: 2, z: 3 }
+
+// # 泛型
+// 1. 泛型函数
+function tsCreateArray1(length: number, value: any): Array<any> {
+    let result: any[] = []
+    for (let i = 0; i < length; i++) {
+        result[i] = value
+    }
+    return result
+}
+tsCreateArray1(3, 'x')
+// 2. 泛型函数
+function tsCreateArray2<T>(length: number, value: T): Array<T> {
+    let result: T[] = []
+    for (let i = 0; i < length; i++) {
+        result[i] = value
+    }
+    return result
+}
+tsCreateArray2<string>(3, 'x')
+// 3. 泛型类
+class tsGenericNumber<T> {
+    zeroValue: T
+    add: (x: T, y: T) => T
+}
+let tsMyGenericNumber = new tsGenericNumber<number>()
+tsMyGenericNumber.zeroValue = 0
+tsMyGenericNumber.add = function (x, y) {
+    return x + y
+}
+// 4. 泛型约束
+interface tsLengthwise {
+    length: number
+}
+function tsLoggingIdentity<T extends tsLengthwise>(arg: T): T {
+    console.log(arg.length);
+    return arg
+}
+tsLoggingIdentity({ length: 10, value: 3 })
+
