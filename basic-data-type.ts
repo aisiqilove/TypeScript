@@ -190,12 +190,18 @@ function add(a: number | string, b: number | string): number | string {
 // 2. as语法
 class Student {
     name: string
+    constructor(name: string) {
+        this.name = name
+    }
     sayHi() {
         console.log('hi');
     }
 }
 class Teacher {
     name: string
+    constructor(name: string) {
+        this.name = name
+    }
     sayBye() {
         console.log('bye');
     }
@@ -270,7 +276,7 @@ enum tsDirection1 {
     Right = 'RIGHT'
 }
 console.log(tsDirection1.Up);
-console.log(tsDirection1[0]);
+// console.log(tsDirection1[0]);
 // 3. 异构枚举
 // enum tsDirection2 {
 //     Up = 'UP',
@@ -358,7 +364,7 @@ tsCat3.name = 'Tom'
 console.log(tsCat3.name);
 // 7. 静态属性
 class tsAnimal3 {
-    static isAnimal(a) {
+    static isAnimal(a: object) {
         return a instanceof tsAnimal3
     }
 }
@@ -371,7 +377,7 @@ abstract class tsAnimal4 {
     public constructor(name: string) {
         this.name = name
     }
-    public abstract sayHi()
+    public abstract sayHi(): void
 }
 class tsCat5 extends tsAnimal4 {
     public sayHi() {
@@ -385,7 +391,7 @@ tsCat6.sayHi()
 
 // 9.1 类实现接口
 interface tsAlarm1 {
-    alert()
+    alert(): void
 }
 class tsDoor1 implements tsAlarm1 {
     alert() {
@@ -401,11 +407,11 @@ class tsPoliceDoor extends tsDoor1 implements tsAlarm1 {
 
 // 9.2 接口继承接口
 interface tsAlarm2 {
-    alert()
+    alert(): void
 }
 interface tsLightableAlarm extends tsAlarm2 {
-    lightOn()
-    lightOff()
+    lightOn(): void
+    lightOff(): void
 }
 class tsDoor2 implements tsLightableAlarm {
     alert() {
@@ -423,6 +429,10 @@ class tsDoor2 implements tsLightableAlarm {
 class tsPoint {
     x: number
     y: number
+    constructor(x: number, y: number) {
+        this.x = x
+        this.y = y
+    }
 }
 interface tsPoint3d extends tsPoint {
     z: number
@@ -449,9 +459,13 @@ function tsCreateArray2<T>(length: number, value: T): Array<T> {
 }
 tsCreateArray2<string>(3, 'x')
 // 3. 泛型类
-class tsGenericNumber<T> {
+class tsGenericNumber<T = number> {
     zeroValue: T
     add: (x: T, y: T) => T
+    constructor(zeroValue?: T, add?: (x: T, y: T) => T) {
+        this.zeroValue = zeroValue || 0 as T;
+        this.add = add || ((x: any, y: any) => x + y) as any;
+    }
 }
 let tsMyGenericNumber = new tsGenericNumber<number>()
 tsMyGenericNumber.zeroValue = 0
