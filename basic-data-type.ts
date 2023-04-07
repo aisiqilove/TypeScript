@@ -482,3 +482,61 @@ function tsLoggingIdentity<T extends tsLengthwise>(arg: T): T {
 }
 tsLoggingIdentity({ length: 10, value: 3 })
 
+// # 声明合并
+// 1. 接口合并
+interface tsAlarm {
+    price: number
+}
+interface tsAlarm {
+    weight: number
+}
+let tsAlarm: tsAlarm = {
+    price: 1,
+    weight: 2
+}
+// 2. 命名空间合并
+namespace tsA {
+    export interface tsAlarm {
+        price: number
+    }
+}
+namespace tsA {
+    export interface tsAlarm {
+        weight: number
+    }
+}
+let tsAlarm1: tsA.tsAlarm = {
+    price: 1,
+    weight: 2
+}
+// 3. 函数合并
+function tsLib1(config: { a: string }): void
+function tsLib1(config: { b: number }): void
+function tsLib1(config: { a: string, b: number }): void
+function tsLib1(config: any): void {
+
+}
+
+
+// # 命名空间
+// 1. 命名空间
+namespace tsA {
+    export interface tsAlarm {
+        price: number
+    }
+}
+let tsAlarm2: tsA.tsAlarm = {
+    price: 1,
+    weight: 2
+}
+// 2. 命名空间嵌套
+namespace tsA {
+    export namespace tsB {
+        export interface tsAlarm {
+            price: number
+        }
+    }
+}
+let tsAlarm3: tsA.tsB.tsAlarm = {
+    price: 1
+}
